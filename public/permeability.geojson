@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Id": 11,
+        "Class": "Slow",
+        "Description": "Soils with slow permeability."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [110.37, -7.78],
+            [110.38, -7.78],
+            [110.38, -7.79],
+            [110.37, -7.79],
+            [110.37, -7.78]
+          ]
+        ]
+      }
+    }
+  ]
+}
