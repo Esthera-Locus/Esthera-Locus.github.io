@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  /*Esthera Locus Font Family*/
+  --font-sans: "Poppins", "sans-serif";
+
+  /*Esthera Locus Color Palette*/
+  --color-locus1a: #3C5E45;
+  --color-locus1b: #5D916B;
+  --color-locus1c: #92D995;
+  --color-locus1d: #E7FED4;
+
+  --color-locus2a: #2D5348;
+  --color-locus2b: #426E55; 
+  --color-locus2c: #94AE65; 
+  --color-locus2d: #E1DD5F; 
+
+  --color-locus3a: #003F2E; 
+  --color-locus3b: #489581;
+  --color-locus3c: #DBCFA7;
+  --color-locus3d: #FEF7E4;
+  
+  --color-locus4a: #0E2F1E;
+  --color-locus4b: #FEFEFE;
+
+  /*Dropshadow*/
+  --shadow-soft: 0 4px 12px 0 rgb(0 0 0 / 0.08);
+
+  /*Round/Corner*/
+  --radius-main: 25px;
+}
