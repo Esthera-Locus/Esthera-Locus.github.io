@@ -1,2 +1,3 @@
-# Welcome to Esthera-Locus.github.io!
-The pride & crown jewel of KPJ'23. This is the best we can offer, given the minimal budget (none at all)!
+# Welcome to The Crown Jewel of Esthera-Locus!
+This code repository is designed to demonstrate the best KPJ'23 has to offer with the least amount of budget (none at all!).
+
