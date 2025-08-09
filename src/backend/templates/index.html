@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoCatalog Viewer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 400px; }
+    .peta-item { cursor: pointer; color: blue; margin-left: 20px; }
+  </style>
+</head>
+<body>
+  <h2>GeoCatalog</h2>
+  <div id="catalog"></div>
+  <hr>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const catalogDiv = document.getElementById("catalog");
+    const map = L.map("map").setView([-7.3, 110.3], 10);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    let currentLayer = null;
+
+    // Fetch katalog dari backend
+    fetch("/api/geocatalog")
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(tema => {
+          const temaEl = document.createElement("h3");
+          temaEl.textContent = tema.nama;
+          catalogDiv.appendChild(temaEl);
+
+          tema.subtemas.forEach(sub => {
+            const subEl = document.createElement("h4");
+            subEl.textContent = "↳ " + sub.nama;
+            catalogDiv.appendChild(subEl);
+
+            sub.petas.forEach(peta => {
+              const petaEl = document.createElement("div");
+              petaEl.textContent = "• " + peta.nama;
+              petaEl.className = "peta-item";
+              petaEl.onclick = () => {
+                if (currentLayer) {
+                  map.removeLayer(currentLayer);
+                }
+
+                fetch(`/static/${peta.filename}`)
+                  .then(res => res.json())
+                  .then(geojson => {
+                    currentLayer = L.geoJSON(geojson).addTo(map);
+                    map.fitBounds(currentLayer.getBounds());
+                  });
+              };
+              catalogDiv.appendChild(petaEl);
+            });
+          });
+        });
+      });
+  </script>
+</body>
+</html>

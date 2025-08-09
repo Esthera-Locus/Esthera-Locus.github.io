@@ -1,0 +1,5 @@
+{
+  "terminal.integrated.env.windows": {
+    "VIRTUAL_ENV_DISABLE_PROMPT": "0"
+  }
+}
