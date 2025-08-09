@@ -8,6 +8,4 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/Esthera-Locus.github.io/', // ganti sesuai nama repo GitHub
 })
-
