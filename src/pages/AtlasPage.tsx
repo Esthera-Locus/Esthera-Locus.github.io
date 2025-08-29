@@ -11,8 +11,43 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from "@dnd-kit/utilities";
 import { createRoot } from 'react-dom/client';
 
+// TypeScript interfaces
+interface MenuItem {
+  title: string;
+  key?: string;
+  icon?: React.ReactNode;
+  subMenu?: MenuItem[];
+  description?: string;
+  id?: string;
+  geojsonData?: any;
+  color?: string;
+}
 
-const toDMS = (coord) => {
+interface Layer {
+  id: string;
+  title: string;
+  opacity: number;
+  geojsonData?: any;
+  color?: string;
+}
+
+interface Basemap {
+  id: string;
+  styleUrl: string;
+  previewImage: string;
+  name?: string;
+}
+
+interface ScaleInfo {
+  width: number;
+  text: string;
+}
+
+interface MapFeature {
+  properties: Record<string, any>;
+}
+
+const toDMS = (coord: number): string => {
   const absolute = Math.abs(coord);
   const degrees = Math.floor(absolute);
   const minutesNotTruncated = (absolute - degrees) * 60;
@@ -21,11 +56,9 @@ const toDMS = (coord) => {
   return `${degrees}° ${minutes}' ${seconds}"`;
 };
 
-
-const getStylesForItem = (item, level) => {
+const getStylesForItem = (item: MenuItem, level: number): string => {
   const baseStyles = "flex items-center gap-x-2 py-1 px-2 rounded-lg cursor-pointer";
   const isMapItem = !item.subMenu && !item.description; // An item is a "map" if it has no sub-menu or description.
-
 
   if (isMapItem) {
     return `${baseStyles} hover:bg-white/10 font-thin text-xs`;
@@ -44,14 +77,7 @@ const getStylesForItem = (item, level) => {
   }
 };
 
-
-
-
-
-
-
-
-const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
+const InfoPopup = ({ layer, onClose, isSidebarOpen }: { layer: Layer; onClose: () => void; isSidebarOpen: boolean }) => (
   <div
     className={`absolute top-[75px] rounded-lg shadow-lg text-white w-64 max-w-xs max-h-[calc(100vh-100px)] z-10
               flex flex-col overflow-hidden duration-300 ease-in-out
@@ -64,7 +90,6 @@ const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
         <FaTimes />
       </button>
     </div>
-
 
     {/* Scrollable body part of the pop-up */}
     <div className="flex-grow bg-locus4b p-4 text-xs text-locus4a space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-locus4a/20 scrollbar-track-transparent">
@@ -81,14 +106,10 @@ const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
   </div>
 );
 
-
-
-
 // NEW Component for the on-map feature pop-up content
-const FeaturePopupContent = ({ feature }) => {
+const FeaturePopupContent = ({ feature }: { feature: MapFeature }) => {
   const properties = feature.properties;
   const title = properties['Layer Name'] || 'Feature Info';
-
 
   return (
     // The main container now only handles sizing
@@ -98,7 +119,6 @@ const FeaturePopupContent = ({ feature }) => {
         <h3 className="font-semibold text-sm">{title}</h3>
       </div>
 
-
       {/* Body */}
       <div className="bg-locus4b p-3 text-xs space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-locus4a/20 scrollbar-track-transparent">
         <dl>
@@ -107,7 +127,7 @@ const FeaturePopupContent = ({ feature }) => {
             return (
               <React.Fragment key={key}>
                 <dt className="font-semibold text-locus4a">{key}</dt>
-                <dd className="pl-2 mb-1 text-locus4a">{value.toString()}</dd>
+                <dd className="pl-2 mb-1 text-locus4a">{String(value)}</dd>
               </React.Fragment>
             );
           })}
@@ -117,8 +137,7 @@ const FeaturePopupContent = ({ feature }) => {
   );
 };
 
-
-const StatusBar = ({ isSidebarOpen, scaleInfo, cursorCoords }) => (
+const StatusBar = ({ isSidebarOpen, scaleInfo, cursorCoords }: { isSidebarOpen: boolean; scaleInfo: ScaleInfo; cursorCoords: string }) => (
   <div
     className={`absolute bottom-4 z-10 duration-300 ease-in-out flex items-center gap-4
               text-[10px] text-locus4a bg-locus4b/80 p-1 px-3 rounded-md shadow-lg
@@ -136,15 +155,18 @@ const StatusBar = ({ isSidebarOpen, scaleInfo, cursorCoords }) => (
   </div>
 );
 
-
-const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }) => {
+const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }: { 
+  layer: Layer; 
+  onRemove: (id: string) => void; 
+  onOpacityChange: (id: string, opacity: string) => void; 
+  onInfo: (layer: Layer) => void; 
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: layer.id });
  
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
 
   return (
     <li
@@ -174,26 +196,18 @@ const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }) => {
   );
 };
 
-
-
-
-
-
-
-
-const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick }) => {
+const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick }: { 
+  item: MenuItem; 
+  level?: number; 
+  openMenus: Record<string, boolean>; 
+  toggleMenu: (key: string) => void; 
+  onMapClick: (item: MenuItem) => void; 
+}) => {
   const isMenuOpen = openMenus[item.title];
   const hasSubItems = item.subMenu || item.description;
   const isMapItem = !item.subMenu && !item.description;
  
   const itemStyles = getStylesForItem(item, level);
-
-
-
-
-
-
-
 
   // When a map item is clicked, call the onMapClick prop
   const handleClick = () => {
@@ -203,13 +217,6 @@ const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick 
       onMapClick(item);
     }
   };
-
-
-
-
-
-
-
 
   return (
     <li className="flex flex-col text-sm py-1 rounded-lg text-locus4b">
@@ -242,71 +249,57 @@ const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick 
   );
 };
 
-
-
-
-
-
-
-
 export default function AtlasPage() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [openMenus, setOpenMenus] = useState({});
-  const [activeLayers, setActiveLayers] = useState([]);
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+  const [activeLayers, setActiveLayers] = useState<Layer[]>([]);
   const [isMapsDisplayedOpen, setMapsDisplayedOpen] = useState(true);
-  const [infoLayer, setInfoLayer] = useState(null);
+  const [infoLayer, setInfoLayer] = useState<Layer | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [cursorCoords, setCursorCoords] = useState("");
-  const [scaleInfo, setScaleInfo] = useState({ width: 0, text: "" });
+  const [scaleInfo, setScaleInfo] = useState<ScaleInfo>({ width: 0, text: "" });
 
-
-  const toggleMenu = (key) => {
+  const toggleMenu = (key: string) => {
     setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
   };
  
-  const mapContainer = useRef(null);
-  const map = useRef(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<maptilersdk.Map | null>(null);
 
-// Define your available basemaps using your custom URLs
-const availableBasemaps = [
-  { id: 'streets', styleUrl: `https://api.maptiler.com/maps/019853ca-f6df-77ec-b673-203abaabadc7/style.json`, previewImage: '/basemap-preview/street.png' },
-  { id: 'satellite', styleUrl: `https://api.maptiler.com/maps/019853c9-84f2-74a0-8573-db61659509d2/style.json`, previewImage: '/basemap-preview/satellite.png' },
-  { id: 'hillshade', styleUrl: `https://api.maptiler.com/maps/019853c7-ad20-7f0a-bc1e-8d5788565441/style.json`, previewImage: '/basemap-preview/hillshade.png' },
-];
+  // Define your available basemaps using your custom URLs
+  const availableBasemaps: Basemap[] = [
+    { id: 'streets', styleUrl: `https://api.maptiler.com/maps/019853ca-f6df-77ec-b673-203abaabadc7/style.json`, previewImage: '/basemap-preview/street.png', name: 'Streets' },
+    { id: 'satellite', styleUrl: `https://api.maptiler.com/maps/019853c9-84f2-74a0-8573-db61659509d2/style.json`, previewImage: '/basemap-preview/satellite.png', name: 'Satellite' },
+    { id: 'hillshade', styleUrl: `https://api.maptiler.com/maps/019853c7-ad20-7f0a-bc1e-8d5788565441/style.json`, previewImage: '/basemap-preview/hillshade.png', name: 'Hillshade' },
+  ];
 
-// State to track the currently active basemap
-const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
+  // State to track the currently active basemap
+  const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
-
-
-
-
-
-  const handleMapLayerClick = (mapItem) => {
+  const handleMapLayerClick = (mapItem: MenuItem) => {
     // Check if the layer is already active to prevent duplicates
     if (activeLayers.find(layer => layer.id === mapItem.id)) {
       console.log(`${mapItem.title} is already on the map.`);
       return;
     }
     // Add the new layer to the state
-    const newLayer = { ...mapItem, opacity: 1 };
+    const newLayer: Layer = { 
+      id: mapItem.id || '', 
+      title: mapItem.title, 
+      opacity: 1,
+      geojsonData: mapItem.geojsonData,
+      color: mapItem.color
+    };
     setActiveLayers(prevLayers => [...prevLayers, newLayer]);
   };
 
-
-
-
-
-
-
-
   // Handler to remove a layer from the map
-  const handleRemoveLayer = (layerIdToRemove) => {
+  const handleRemoveLayer = (layerIdToRemove: string) => {
     setActiveLayers(prevLayers => prevLayers.filter(layer => layer.id !== layerIdToRemove));
   };
  
   // Handler to change the opacity of a layer
-  const handleOpacityChange = (layerId, newOpacity) => {
+  const handleOpacityChange = (layerId: string, newOpacity: string) => {
     setActiveLayers(prevLayers =>
       prevLayers.map(layer =>
         layer.id === layerId ? { ...layer, opacity: parseFloat(newOpacity) } : layer
@@ -314,15 +307,8 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     );
   };
 
-
-
-
-
-
-
-
   // Handler for when a drag-and-drop operation ends
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
       setActiveLayers((layers) => {
@@ -333,7 +319,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     }
   };
 
-  const handleBasemapChange = (newBasemapId) => {
+  const handleBasemapChange = (newBasemapId: string) => {
     const newBasemap = availableBasemaps.find(b => b.id === newBasemapId);
     if (map.current && newBasemap) {
       // Use setStyle to change the basemap
@@ -341,9 +327,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       setActiveBasemapId(newBasemapId);
     }
   };
-
-
-
 
   // useEffect for MAP INITIALIZATION (runs only once)
   useEffect(() => {
@@ -364,7 +347,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
    
     map.current.on('load', function() {
       // Add the standard navigation and your working terrain control
-      map.current.addControl(new maptilersdk.TerrainControl({ source: "terrain", exaggeration: 2 }), 'top-right');
+      map.current?.addControl(new maptilersdk.TerrainControl({ source: "terrain", exaggeration: 2 }), 'top-right');
 
       // Logic to update our custom scale bar
       const updateScale = () => {
@@ -378,7 +361,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
         const metersPerPixel = (156543.03392 * Math.cos(y * Math.PI / 180)) / Math.pow(2, zoom);
         const maxMeters = metersPerPixel * maxWidth;
 
-
         const niceDistances = [5000000, 2000000, 1000000, 500000, 200000, 100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
         let niceDistance = 0;
         for (const dist of niceDistances) {
@@ -388,7 +370,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
           }
         }
 
-
         const scaleWidth = niceDistance / metersPerPixel;
         const scaleText = niceDistance >= 1000 ? `${niceDistance / 1000} km` : `${niceDistance} m`;
        
@@ -396,7 +377,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       };
      
       // Your existing coordinate logic
-      const updateCoords = (e) => {
+      const updateCoords = (e: any) => {
         const lng = e.lngLat.lng;
         const lat = e.lngLat.lat;
         const lngDir = lng >= 0 ? 'E' : 'W';
@@ -405,26 +386,22 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       };
      
       // Add the event listeners
-      map.current.on('move', updateScale);
-      map.current.on('mousemove', updateCoords);
-
+      map.current?.on('move', updateScale);
+      map.current?.on('mousemove', updateCoords);
 
       // Run it once on load
       updateScale();
     });
-
 
     return () => { 
       map.current?.remove(); 
     };
   }, [activeBasemapId]);
 
-
   useEffect(() => {
     if (!map.current) return;
 
-
-    const bottomLeftContainer = document.querySelector('.maptiler-control-bottom-left');
+    const bottomLeftContainer = document.querySelector('.maptiler-control-bottom-left') as HTMLElement;
    
     if (bottomLeftContainer) {
       bottomLeftContainer.style.transition = 'transform 0.3s ease-in-out';
@@ -440,85 +417,51 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
   useEffect(() => {
     if (!map.current) return;
 
-
     // The function that will handle the click
-    const clickHandler = (e) => {
+    const clickHandler = (e: any) => {
       const activeVectorLayerIds = activeLayers
         .map(l => `map-layer-${l.id}-layer`)
-        .filter(id => map.current.getLayer(id));
-
-
-
+        .filter(id => map.current?.getLayer(id));
 
       if (activeVectorLayerIds.length === 0) return;
 
-
-      const features = map.current.queryRenderedFeatures(e.point, {
+      const features = map.current?.queryRenderedFeatures(e.point, {
         layers: activeVectorLayerIds,
       });
 
-
-      if (!features.length) return;
+      if (!features || !features.length) return;
       const feature = features[0];
-
-
-
 
       // Placeholder div for the pop-up
       const placeholder = document.createElement('div');
-
-
-
 
       // MapTiler pop-up and set its content to our placeholder
       new maptilersdk.Popup({ className: 'feature-popup', closeButton: false })
         .setLngLat(e.lngLat)
         .setDOMContent(placeholder) // Use setDOMContent instead of setHTML
-        .addTo(map.current);
-
-
-
+        .addTo(map.current!);
 
       // 3. Tell React to render our component into that placeholder
       const root = createRoot(placeholder);
       root.render(<FeaturePopupContent feature={feature} />);
     };
 
-
-
-
     // Add the click handler to the map
     map.current.on('click', clickHandler);
 
-
-
-
     // Cleanup: remove the handler when the component re-renders or unmounts
     return () => {
-      map.current.off('click', clickHandler);
+      map.current?.off('click', clickHandler);
     };
   }, [activeLayers]); // IMPORTANT: Dependency on activeLayers
-
-
-
-
-
-
-
 
   // useEffect for LAYER SYNCHRONIZATION (runs when activeLayers changes)
   useEffect(() => {
     if (!map.current?.isStyleLoaded()) return;
 
-
-
-
     const mapInstance = map.current;
    
     const renderedSourceIds = mapInstance.getStyle().sources ? Object.keys(mapInstance.getStyle().sources).filter(id => id.startsWith('map-layer-')) : [];
-
-
-
 
     // Add/Update layers
     activeLayers.forEach(layer => {
@@ -527,24 +470,23 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
      
       if (!mapInstance.getSource(sourceId)) {
         mapInstance.addSource(sourceId, { type: 'geojson', data: layer.geojsonData });
-        const geomType = layer.geojsonData.geometry.type;
-        if (geomType.includes('Polygon')) {
+        const geomType = layer.geojsonData?.geometry?.type;
+        if (geomType?.includes('Polygon')) {
           mapInstance.addLayer({ id: layerId, type: 'fill', source: sourceId, paint: { 'fill-color': layer.color, 'fill-opacity': layer.opacity }});
-        } else if (geomType.includes('LineString')) {
+        } else if (geomType?.includes('LineString')) {
           mapInstance.addLayer({ id: layerId, type: 'line', source: sourceId, paint: { 'line-color': layer.color, 'line-width': 3, 'line-opacity': layer.opacity }});
-        } else if (geomType.includes('Point')) {
+        } else if (geomType?.includes('Point')) {
           mapInstance.addLayer({ id: layerId, type: 'circle', source: sourceId, paint: { 'circle-color': layer.color, 'circle-radius': 6, 'circle-opacity': layer.opacity }});
         }
       } else {
         if (mapInstance.getLayer(layerId)) {
-          const layerType = mapInstance.getLayer(layerId).type;
-          mapInstance.setPaintProperty(layerId, `${layerType}-opacity`, layer.opacity);
+          const layerType = mapInstance.getLayer(layerId)?.type;
+          if (layerType) {
+            mapInstance.setPaintProperty(layerId, `${layerType}-opacity`, layer.opacity);
+          }
         }
       }
     });
-
-
-
 
     // Remove old layers
     renderedSourceIds.forEach(sourceId => {
@@ -565,12 +507,9 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     });
   }, [activeLayers]);
 
-
-
-
-   // NEW: A recursive helper function to find all map items in your Menus data
-  const getAllMapItems = (menuItems) => {
-    let maps = [];
+  // NEW: A recursive helper function to find all map items in your Menus data
+  const getAllMapItems = (menuItems: MenuItem[]): MenuItem[] => {
+    let maps: MenuItem[] = [];
     for (const item of menuItems) {
       // An item is a map if it has no sub-menu and no description
       if (!item.subMenu && !item.description) {
@@ -584,9 +523,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     return maps;
   };
 
-
-
-
   // NEW: This logic now filters your local Menus data instead of calling an API
   const searchResults = React.useMemo(() => {
     if (searchQuery.length < 2) {
@@ -599,11 +535,15 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
   }, [searchQuery]);
 
   // NEW Custom Basemap Switcher Component
-  const BasemapSwitcher = ({ basemaps, activeBasemapId, onBasemapChange }) => {
+  const BasemapSwitcher = ({ basemaps, activeBasemapId, onBasemapChange }: { 
+    basemaps: Basemap[]; 
+    activeBasemapId: string; 
+    onBasemapChange: (id: string) => void; 
+  }) => {
     const [isOpen, setIsOpen] = useState(false);
     const activeBasemap = basemaps.find(b => b.id === activeBasemapId) || basemaps[0];
 
-    const handleSelect = (id) => {
+    const handleSelect = (id: string) => {
       onBasemapChange(id);
       setIsOpen(false);
     };
@@ -634,12 +574,10 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     );
   };
 
-
   return (
     <div className="relative h-screen w-screen">
       {/* Map Container */}
       <div ref={mapContainer} className="w-full h-full" />
-
 
       <StatusBar
         isSidebarOpen={isSidebarOpen}
@@ -697,9 +635,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
        
         <hr className="border-t border-gray-600 mx-5" />
 
-
-
-
         <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
           <ul className="pt-2 px-5 pb-5">
             {Menus.map((menuItem) => {
@@ -728,12 +663,12 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
               }
               return (
                 <li key={menuItem.key} className={`flex flex-col rounded-md text-zinc-50 text-sm`}>
-                  <div className="flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white/20 rounded-md font-semibold" onClick={() => menuItem.subMenu && toggleMenu(menuItem.key)}>
+                  <div className="flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white/20 rounded-md font-semibold" onClick={() => menuItem.subMenu && toggleMenu(menuItem.key || '')}>
                     <span className="text-2xl block float-left">{menuItem.icon}</span>
                     <span className={`text-base flex-1 duration-200 ${!isSidebarOpen && "hidden"}`}>{menuItem.title}</span>
-                    {menuItem.subMenu && isSidebarOpen && <FaChevronRight className={`text-xs duration-300 ${openMenus[menuItem.key] && "rotate-90"}`} />}
+                    {menuItem.subMenu && isSidebarOpen && <FaChevronRight className={`text-xs duration-300 ${openMenus[menuItem.key || ''] && "rotate-90"}`} />}
                   </div>
-                  {menuItem.subMenu && openMenus[menuItem.key] && isSidebarOpen && (
+                  {menuItem.subMenu && openMenus[menuItem.key || ''] && isSidebarOpen && (
                     <ul className="text-zinc-300">
                       {menuItem.subMenu.map((subItem, subIndex) => (
                         <RecursiveMenuItem key={subIndex} item={subItem} openMenus={openMenus} toggleMenu={toggleMenu} onMapClick={handleMapLayerClick} />
@@ -757,7 +692,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       />
     </div>
   );
-};
+}
 
 
 
