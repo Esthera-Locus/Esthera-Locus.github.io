@@ -1,6 +1,4 @@
-export default function LandingPage() {
-  return (
-    
+import React, { useState, useRef, useEffect } from "react";
 import { createRoot } from 'react-dom/client';
 import { useRef, useEffect, useState } from "react";
 import { motion , AnimatePresence } from "framer-motion";
