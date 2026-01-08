@@ -12,6 +12,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { createRoot } from 'react-dom/client';
 
 
+
+
 const toDMS = (coord) => {
   const absolute = Math.abs(coord);
   const degrees = Math.floor(absolute);
@@ -22,9 +24,13 @@ const toDMS = (coord) => {
 };
 
 
+
+
 const getStylesForItem = (item, level) => {
   const baseStyles = "flex items-center gap-x-2 py-1 px-2 rounded-lg cursor-pointer";
   const isMapItem = !item.subMenu && !item.description; // An item is a "map" if it has no sub-menu or description.
+
+
 
 
   if (isMapItem) {
@@ -51,6 +57,14 @@ const getStylesForItem = (item, level) => {
 
 
 
+
+
+
+
+
+
+
+
 const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
   <div
     className={`absolute top-[75px] rounded-lg shadow-lg text-white w-64 max-w-xs max-h-[calc(100vh-100px)] z-10
@@ -64,6 +78,8 @@ const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
         <FaTimes />
       </button>
     </div>
+
+
 
 
     {/* Scrollable body part of the pop-up */}
@@ -84,10 +100,16 @@ const InfoPopup = ({ layer, onClose, isSidebarOpen }) => (
 
 
 
+
+
+
+
 // NEW Component for the on-map feature pop-up content
 const FeaturePopupContent = ({ feature }) => {
   const properties = feature.properties;
   const title = properties['Layer Name'] || 'Feature Info';
+
+
 
 
   return (
@@ -97,6 +119,8 @@ const FeaturePopupContent = ({ feature }) => {
       <div className="bg-locus4a p-2 flex justify-between items-center flex-shrink-0">
         <h3 className="font-semibold text-sm">{title}</h3>
       </div>
+
+
 
 
       {/* Body */}
@@ -118,6 +142,8 @@ const FeaturePopupContent = ({ feature }) => {
 };
 
 
+
+
 const StatusBar = ({ isSidebarOpen, scaleInfo, cursorCoords }) => (
   <div
     className={`absolute bottom-4 z-10 duration-300 ease-in-out flex items-center gap-4
@@ -137,6 +163,8 @@ const StatusBar = ({ isSidebarOpen, scaleInfo, cursorCoords }) => (
 );
 
 
+
+
 const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: layer.id });
  
@@ -144,6 +172,8 @@ const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+
 
 
   return (
@@ -181,12 +211,28 @@ const SortableLayerItem = ({ layer, onRemove, onOpacityChange, onInfo }) => {
 
 
 
+
+
+
+
+
+
+
+
 const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick }) => {
   const isMenuOpen = openMenus[item.title];
   const hasSubItems = item.subMenu || item.description;
   const isMapItem = !item.subMenu && !item.description;
  
   const itemStyles = getStylesForItem(item, level);
+
+
+
+
+
+
+
+
 
 
 
@@ -203,6 +249,14 @@ const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick 
       onMapClick(item);
     }
   };
+
+
+
+
+
+
+
+
 
 
 
@@ -249,6 +303,14 @@ const RecursiveMenuItem = ({ item, level = 0, openMenus, toggleMenu, onMapClick 
 
 
 
+
+
+
+
+
+
+
+
 export default function AtlasPage() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState({});
@@ -260,12 +322,15 @@ export default function AtlasPage() {
   const [scaleInfo, setScaleInfo] = useState({ width: 0, text: "" });
 
 
+
+
   const toggleMenu = (key) => {
     setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
   };
  
   const mapContainer = useRef(null);
   const map = useRef(null);
+
 
 // Define your available basemaps using your custom URLs
 const availableBasemaps = [
@@ -274,8 +339,15 @@ const availableBasemaps = [
   { id: 'hillshade', styleUrl: `https://api.maptiler.com/maps/019853c7-ad20-7f0a-bc1e-8d5788565441/style.json`, previewImage: '/basemap-preview/hillshade.png' },
 ];
 
+
 // State to track the currently active basemap
 const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
+
+
+
+
+
+
 
 
 
@@ -292,6 +364,14 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     const newLayer = { ...mapItem, opacity: 1 };
     setActiveLayers(prevLayers => [...prevLayers, newLayer]);
   };
+
+
+
+
+
+
+
+
 
 
 
@@ -321,6 +401,14 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
+
+
+
+
   // Handler for when a drag-and-drop operation ends
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -332,6 +420,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       });
     }
   };
+
 
   const handleBasemapChange = (newBasemapId) => {
     const newBasemap = availableBasemaps.find(b => b.id === newBasemapId);
@@ -345,11 +434,16 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
   // useEffect for MAP INITIALIZATION (runs only once)
   useEffect(() => {
     if (!mapContainer.current) return;
     const apiKey = import.meta.env.VITE_MAPTILER_API_KEY || 'xfcrXKfMNocHqLR21b3x';
     maptilersdk.config.apiKey = apiKey;
+
 
     const initialBasemap = availableBasemaps.find(b => b.id === activeBasemapId);
     if (!initialBasemap) return; // Exit if basemap not found
@@ -366,6 +460,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       // Add the standard navigation and your working terrain control
       map.current.addControl(new maptilersdk.TerrainControl({ source: "terrain", exaggeration: 2 }), 'top-right');
 
+
       // Logic to update our custom scale bar
       const updateScale = () => {
         const mapInstance = map.current;
@@ -379,6 +474,8 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
         const maxMeters = metersPerPixel * maxWidth;
 
 
+
+
         const niceDistances = [5000000, 2000000, 1000000, 500000, 200000, 100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
         let niceDistance = 0;
         for (const dist of niceDistances) {
@@ -387,6 +484,8 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
             break;
           }
         }
+
+
 
 
         const scaleWidth = niceDistance / metersPerPixel;
@@ -409,19 +508,27 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       map.current.on('mousemove', updateCoords);
 
 
+
+
       // Run it once on load
       updateScale();
     });
 
 
-    return () => { 
-      map.current?.remove(); 
+
+
+    return () => {
+      map.current?.remove();
     };
   }, [activeBasemapId]);
 
 
+
+
   useEffect(() => {
     if (!map.current) return;
+
+
 
 
     const bottomLeftContainer = document.querySelector('.maptiler-control-bottom-left');
@@ -441,6 +548,8 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     if (!map.current) return;
 
 
+
+
     // The function that will handle the click
     const clickHandler = (e) => {
       const activeVectorLayerIds = activeLayers
@@ -450,12 +559,20 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
       if (activeVectorLayerIds.length === 0) return;
+
+
 
 
       const features = map.current.queryRenderedFeatures(e.point, {
         layers: activeVectorLayerIds,
       });
+
+
 
 
       if (!features.length) return;
@@ -464,8 +581,16 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
       // Placeholder div for the pop-up
       const placeholder = document.createElement('div');
+
+
+
+
 
 
 
@@ -479,6 +604,10 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
       // 3. Tell React to render our component into that placeholder
       const root = createRoot(placeholder);
       root.render(<FeaturePopupContent feature={feature} />);
@@ -487,8 +616,16 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
     // Add the click handler to the map
     map.current.on('click', clickHandler);
+
+
+
+
 
 
 
@@ -506,6 +643,14 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
+
+
+
+
   // useEffect for LAYER SYNCHRONIZATION (runs when activeLayers changes)
   useEffect(() => {
     if (!map.current?.isStyleLoaded()) return;
@@ -513,9 +658,17 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
     const mapInstance = map.current;
    
     const renderedSourceIds = mapInstance.getStyle().sources ? Object.keys(mapInstance.getStyle().sources).filter(id => id.startsWith('map-layer-')) : [];
+
+
+
+
 
 
 
@@ -542,6 +695,10 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
         }
       }
     });
+
+
+
+
 
 
 
@@ -587,6 +744,10 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
+
+
+
+
   // NEW: This logic now filters your local Menus data instead of calling an API
   const searchResults = React.useMemo(() => {
     if (searchQuery.length < 2) {
@@ -598,15 +759,18 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     );
   }, [searchQuery]);
 
+
   // NEW Custom Basemap Switcher Component
   const BasemapSwitcher = ({ basemaps, activeBasemapId, onBasemapChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const activeBasemap = basemaps.find(b => b.id === activeBasemapId) || basemaps[0];
 
+
     const handleSelect = (id) => {
       onBasemapChange(id);
       setIsOpen(false);
     };
+
 
     return (
       <div className="absolute bottom-6 right-4 z-10 flex items-end gap-2">
@@ -623,6 +787,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
           }
         </div>
 
+
         {/* The currently active basemap button */}
         <div className="flex-shrink-0">
           <button onClick={() => setIsOpen(prev => !prev)} className="w-24 text-center group">
@@ -635,10 +800,14 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
   };
 
 
+
+
   return (
     <div className="relative h-screen w-screen">
       {/* Map Container */}
       <div ref={mapContainer} className="w-full h-full" />
+
+
 
 
       <StatusBar
@@ -660,7 +829,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
           <div className="flex gap-x-4 items-center">
             <img src="/EstheraLocus-Logo.svg" alt="logo" className={`w-10 h-10 cursor-pointer duration-500 ${isSidebarOpen && "rotate-[360deg]"}`} />
             <h1 className={`italic text-zinc-50 origin-left font-semibold text-[10px] duration-200 ${!isSidebarOpen && "scale-0"}`}>
-              ESTHERA LOCUS ATLAS v1.0 <br/> CARTOGRAPHY & REMOTE SENSING <br/> UNIVERSITAS GADJAH MADA
+              ESTHERA LOCUS ATLAS <br/> CARTOGRAPHY & REMOTE SENSING <br/> UNIVERSITAS GADJAH MADA
             </h1>
           </div>
           <div className="relative">
@@ -696,6 +865,10 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
         </div>
        
         <hr className="border-t border-gray-600 mx-5" />
+
+
+
+
 
 
 
@@ -749,7 +922,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
      
       {/* Info Popup */}
       {infoLayer && <InfoPopup layer={infoLayer} onClose={() => setInfoLayer(null)} isSidebarOpen={isSidebarOpen} />}
-      
+     
       <BasemapSwitcher
         basemaps={availableBasemaps}
         activeBasemapId={activeBasemapId}
@@ -758,6 +931,14 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     </div>
   );
 };
+
+
+
+
+
+
+
+
 
 
 
