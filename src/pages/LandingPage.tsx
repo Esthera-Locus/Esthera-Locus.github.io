@@ -148,7 +148,7 @@ description: "Kuliah Kerja Lapangan 2 (KKL 2) merupakan salah satu bentuk kegiat
 
 export default function LandingPage() 
 
-  return (
+
     <div className="font-sans relative overflow-hidden bg-[#FEF7E4]">
       {floatingCursor}
      
