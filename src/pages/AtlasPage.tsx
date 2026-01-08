@@ -35,10 +35,10 @@ const getStylesForItem = (item, level) => {
     // Level 0: KKL
     case 0:
       return `${baseStyles} bg-white/20 font-semibold text-white`;
-    // Level 1: Tema
+    // Level 1: Theme
     case 1:
       return `${baseStyles} bg-white/10 font-medium`;
-    // Level 2+: subtema
+    // Level 2+: Subtheme
     default:
       return `${baseStyles} bg-white/5 font-light`;
   }
