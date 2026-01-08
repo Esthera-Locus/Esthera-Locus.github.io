@@ -491,5 +491,4 @@ description: "Kuliah Kerja Lapangan 2 (KKL 2) merupakan salah satu bentuk kegiat
 )};
 
 
-export default LandingPage;
 
