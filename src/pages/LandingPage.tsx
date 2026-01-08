@@ -4,8 +4,6 @@ import { motion , AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
 
-
-
 const LandingPage = () => {
   const [showChat, setShowChat] = useState(false);
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
