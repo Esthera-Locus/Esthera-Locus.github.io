@@ -6,7 +6,6 @@ import { FaEarthAsia, FaLayerGroup } from "react-icons/fa6";
 // A large red square
 const largePolygonGeoJSON = {
   type: 'Feature',
-  // [ADDED] properties object for attributes
   properties: {
     'Layer Name': 'Kepadatan Penduduk',
     'Value': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultrices pharetra nunc, id accumsan nulla fermentum eu. Phasellus mi orci, mollis eu dui et, ornare consequat ante. Praesent luctus ex sit amet ante feugiat, a varius lacus tincidunt. Ut mollis odio ex, ut faucibus tellus vehicula ac. Ut sem ante, egestas sit amet tortor at, faucibus imperdiet dolor. Donec molestie maximus sem, in rutrum nunc interdum vitae. Maecenas volutpat, lacus in porta porttitor, massa lorem venenatis tellus, id aliquet lectus diam eu nunc. Morbi lorem risus, dapibus nec sem sit amet, rhoncus bibendum nibh. Vivamus pretium lacus ac dapibus hendrerit. Vivamus eu ullamcorper quam, luctus auctor velit. Sed pharetra velit sit amet dictum molestie. Etiam quis ligula eleifend, sagittis nunc nec, convallis massa.',
@@ -114,8 +113,8 @@ export const Menus = [
         ]
       },
       {
-        title: "KKL III Guangdong",
-        description: "Coming Soon..."
+        title: "KKL III Lombok Tengah",
+        description: "Analisis & Pemodelan Geospasial (Coming Soon)"
       }
     ]
   },

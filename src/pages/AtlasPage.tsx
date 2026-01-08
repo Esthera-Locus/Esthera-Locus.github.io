@@ -4,7 +4,7 @@ import { FaSearch, FaChevronDown, FaChevronUp, FaLayerGroup, FaTimes, FaInfoCirc
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import * as maptilersdk from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
-import { Menus } from "../backend/data/menuData.tsx";
+import { Menus } from "../data/menuData";
 import { FaGripVertical } from "react-icons/fa";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -568,7 +568,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
 
 
-   // NEW: A recursive helper function to find all map items in your Menus data
+   // A recursive helper function to find all map items in your Menus data
   const getAllMapItems = (menuItems) => {
     let maps = [];
     for (const item of menuItems) {
