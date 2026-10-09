@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaEarthAsia, FaChevronRight, } from "react-icons/fa6";
-import { FaSearch, FaChevronDown, FaChevronUp, FaLayerGroup, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa6";
+import { FaSearch, FaTimes, FaInfoCircle } from "react-icons/fa";
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import * as maptilersdk from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
@@ -11,7 +11,24 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from "@dnd-kit/utilities";
 import { createRoot } from 'react-dom/client';
 
+const availableBasemaps = [
+  { id: 'streets', styleUrl: 'https://api.maptiler.com/maps/019853ca-f6df-77ec-b673-203abaabadc7/style.json', previewImage: '/basemap-preview/street.png' },
+  { id: 'satellite', styleUrl: 'https://api.maptiler.com/maps/019853c9-84f2-74a0-8573-db61659509d2/style.json', previewImage: '/basemap-preview/satellite.png' },
+  { id: 'hillshade', styleUrl: 'https://api.maptiler.com/maps/019853c7-ad20-7f0a-bc1e-8d5788565441/style.json', previewImage: '/basemap-preview/hillshade.png' },
+];
 
+const getAllMapItems = (menuItems) => {
+  let maps = [];
+  for (const item of menuItems) {
+    if (!item.subMenu && !item.description) {
+      maps.push(item);
+    }
+    if (item.subMenu) {
+      maps = maps.concat(getAllMapItems(item.subMenu));
+    }
+  }
+  return maps;
+};
 
 
 const toDMS = (coord) => {
@@ -332,14 +349,6 @@ export default function AtlasPage() {
   const map = useRef(null);
 
 
-// Define your available basemaps using your custom URLs
-const availableBasemaps = [
-  { id: 'streets', styleUrl: `https://api.maptiler.com/maps/019853ca-f6df-77ec-b673-203abaabadc7/style.json`, previewImage: '/basemap-preview/street.png' },
-  { id: 'satellite', styleUrl: `https://api.maptiler.com/maps/019853c9-84f2-74a0-8573-db61659509d2/style.json`, previewImage: '/basemap-preview/satellite.png' },
-  { id: 'hillshade', styleUrl: `https://api.maptiler.com/maps/019853c7-ad20-7f0a-bc1e-8d5788565441/style.json`, previewImage: '/basemap-preview/hillshade.png' },
-];
-
-
 // State to track the currently active basemap
 const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
 
@@ -541,7 +550,7 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
         bottomLeftContainer.style.transform = 'translateX(80px)'; // w-20 = 80px
       }
     }
-  }, [isSidebarOpen, map.current]);
+  }, [isSidebarOpen]);
  
   // NEW useEffect for the map click handler
   useEffect(() => {
@@ -721,29 +730,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
       }
     });
   }, [activeLayers]);
-
-
-
-
-   // A recursive helper function to find all map items in your Menus data
-  const getAllMapItems = (menuItems) => {
-    let maps = [];
-    for (const item of menuItems) {
-      // An item is a map if it has no sub-menu and no description
-      if (!item.subMenu && !item.description) {
-        maps.push(item);
-      }
-      // If it has a sub-menu, search inside it recursively
-      if (item.subMenu) {
-        maps = maps.concat(getAllMapItems(item.subMenu));
-      }
-    }
-    return maps;
-  };
-
-
-
-
 
 
 
@@ -931,8 +917,6 @@ const [activeBasemapId, setActiveBasemapId] = useState(availableBasemaps[0].id);
     </div>
   );
 };
-
-
 
 
 

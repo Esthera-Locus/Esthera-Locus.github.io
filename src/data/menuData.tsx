@@ -1,5 +1,4 @@
 
-import React from "react";
 import { FaEarthAsia, FaLayerGroup } from "react-icons/fa6";
 
 

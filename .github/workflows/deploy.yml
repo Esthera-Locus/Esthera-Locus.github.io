@@ -23,7 +23,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm install
+      - run: npm ci
+      - run: npm run lint
       - run: npm run build
       # supaya refresh di /atlas tidak 404 (BrowserRouter)
       - run: cp dist/index.html dist/404.html
