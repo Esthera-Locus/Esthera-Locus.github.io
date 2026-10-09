@@ -201,7 +201,7 @@ return (
         Get Started with Mapping Journey
       </p>
     </div>
-    <motion.img src="/image/logokapejeee.png" alt="Esthera Locus logo" className="w-100 h-100 ml-10" />
+    <motion.img src="/image/logokapejeee.png" alt="Esthera Locus logo" className="w-100 h-120 ml-10" />
   </div>
 </section>
 
