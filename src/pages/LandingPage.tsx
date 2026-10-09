@@ -167,7 +167,7 @@ return (
 <section
   id="hero"
   className="relative h-screen flex items-center justify-center bg-cover bg-center px-4"
-  style={{ backgroundImage: "url('/backgroundhero-LP.svg')" }}>
+  style={{ backgroundImage: "url('/image/hero.png')" }}>
 
 
 
@@ -178,11 +178,11 @@ return (
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="text-7xl font-extrabold text-[#114232]"
+        className="text-7xl font-extrabold text-[#FEF7E4]"
       >
         ESTHERA LOCUS.
       </motion.h1>
-      <p className="text-[#114232] mt-2 text-lg">
+      <p className="text-[#FEF7E4] mt-2 text-lg">
         Kartografi dan Penginderaan Jauh 2023 <br />
         Universitas Gadjah Mada
       </p>
@@ -197,11 +197,11 @@ return (
 
 
 
-      <p className="font-bold text-[#114232] mt-3">
+      <p className="font-bold text-[#FEF7E4] mt-3">
         Get Started with Mapping Journey
       </p>
     </div>
-    <motion.img src="/EL-Logo-sticker.svg" alt="logo" className="w-100 h-100 ml-10" />
+    <motion.img src="/image/logokapejeee.png" alt="Esthera Locus logo" className="w-100 h-100 ml-10" />
   </div>
 </section>
 
@@ -233,8 +233,8 @@ return (
         >
           <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-[#114232]/40 group-hover:shadow-[#114232]/40 transition duration-300">
             <img
-              src="/activity/aboutus.svg" // Pastikan ini adalah foto horizontal landscape
-              alt="Esthera Locus"
+              src="/image/Frame%207.png"
+              alt="Citra satelit untuk menggambarkan pemetaan Esthera Locus"
               className="w-full h-auto object-cover"
             />
           </div>
@@ -353,11 +353,11 @@ return (
   <h2 className="text-5xl font-bold text-[#114232] text-center mb-16">Meet Our Developer</h2>
   <div className="flex justify-center flex-wrap gap-16 px-8">
     {[
-  { name: "Zaky Sofyanda", role: "UI/UX Developer",instagram: "@zaksoof", img:"/developer/Jeki.svg" },
-  { name: "Adyatma Damarjati", role: "Front End Developer",instagram: "@damarhtny", img: "/developer/Damar.svg" },
-  { name: "Fajar Ginting", role: "Back End Developer",instagram: "@fajarrginting", img: "/developer/Fajar.svg" },
-  { name: "Dimas Susilo", role: "Front End Developer",instagram: "@drsdimas_", img: "/developer/Dimas.svg" },
-  { name: "Kristoforus Karol", role: "UI/UX Developer",instagram: "@kristokarol_" , img: "/developer/Kristo.svg" },
+  { name: "Zaky Sofyanda", role: "UI/UX Developer",instagram: "@zaksoof", img:"/image/Jeki.png" },
+  { name: "Adyatma Damarjati", role: "Front End Developer",instagram: "@damarhtny", img: "/image/Damar.png" },
+  { name: "Fajar Ginting", role: "Back End Developer",instagram: "@fajarrginting", img: "/image/Fajar.png" },
+  { name: "Dimas Susilo", role: "Front End Developer",instagram: "@drsdimas_", img: "/image/Dimas.png" },
+  { name: "Kristoforus Karol", role: "UI/UX Developer",instagram: "@kristokarol_" , img: "/image/Kristo.png" },
 ].map((dev, i) => (
   <motion.div
     key={i}
