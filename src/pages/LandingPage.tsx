@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import { createRoot } from 'react-dom/client';
-import { useRef, useEffect, useState } from "react";
-import { motion , AnimatePresence } from "framer-motion";
+
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 
 
@@ -146,7 +146,7 @@ description: "Kuliah Kerja Lapangan 2 (KKL 2) merupakan salah satu bentuk kegiat
     />
   );
 
-export default function LandingPage() 
+return (
 
 
     <div className="font-sans relative overflow-hidden bg-[#FEF7E4]">
@@ -487,11 +487,15 @@ export default function LandingPage()
 
 
 
+  
+      </div>
     </div>
+  </footer>
   </div>
-</footer>
-</div>
-)};
+  );
+};
+
+export default LandingPage;
 
 
 
