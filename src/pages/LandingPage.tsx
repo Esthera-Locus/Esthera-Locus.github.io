@@ -1,9 +1,6 @@
-
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-
-
 
 
 const LandingPage = () => {
@@ -147,8 +144,6 @@ description: "Kuliah Kerja Lapangan 2 (KKL 2) merupakan salah satu bentuk kegiat
   );
 
 return (
-
-
     <div className="font-sans relative overflow-hidden bg-[#FEF7E4]">
       {floatingCursor}
      
@@ -290,7 +285,6 @@ return (
       viewport={{ once: false }}
       id="whatwedo"
       className="text-center py-16 mt-5" >
-<section id="whatwedo" className="text-center py-16">
   <h2 className="text-5xl font-bold text-[#114232] mb-20">What We Do</h2>
 
 
@@ -343,7 +337,6 @@ return (
       ))}
     </div>
   </div>
-</section>
 </motion.section>
 
 
@@ -487,15 +480,11 @@ return (
 
 
 
-  
-      </div>
     </div>
-  </footer>
   </div>
+</footer>
+    </div>
   );
 };
 
 export default LandingPage;
-
-
-
