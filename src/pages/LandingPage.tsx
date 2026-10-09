@@ -3,7 +3,7 @@ export default function LandingPage() {
     <div style={{ padding: '2rem' }}>
       <h1>Landing Page</h1>
       <p>Work in progress...</p>
-      <p>DAMAR can replace this with the real landing page later.</p>
+      <p>DAMAR can replace this with the real landing page laterrrr.</p>
     </div>
   );
 }
