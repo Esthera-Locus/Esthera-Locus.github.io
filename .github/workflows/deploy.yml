@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,11 +26,21 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-      # supaya refresh di /atlas tidak 404 (BrowserRouter)
-      - run: cp dist/index.html dist/404.html
+      - run: npm run publish:pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+      - name: Publish static site files to the Pages branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all -- index.html 404.html assets image basemap-preview EstheraLocus-Logo.svg
+          if git diff --cached --quiet; then
+            echo "The static site is already up to date."
+          else
+            git commit -m "Publish website build [skip ci]"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
 
   deploy:
     needs: build
